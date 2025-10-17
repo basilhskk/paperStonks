@@ -3,9 +3,8 @@ from datetime import datetime
 
 
 # Import your Waveshare driver by model name from config
-# Example for 2.13" v3:
-from waveshare_epd import epd2in13_V4 as epd_driver
-
+# Example for 2.13" v4:
+from TP_lib import epd2in13_V4 as epd_driver
 
 FONT_REG = ImageFont.truetype("fonts/Inter-Regular.ttf", 18)
 FONT_BIG = ImageFont.truetype("fonts/Inter-Bold.ttf", 40)
