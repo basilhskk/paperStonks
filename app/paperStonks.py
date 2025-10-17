@@ -13,7 +13,7 @@ FETCHERS = {
 
 def run():
     with open('config.yaml') as f:
-    cfg = yaml.safe_load(f)
+        cfg = yaml.safe_load(f)
 
 
     disp = Display(rotation=cfg['display'].get('rotation', 0))
