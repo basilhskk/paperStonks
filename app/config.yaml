@@ -1,9 +1,8 @@
 display:
-model: epd2in13_V3 # or epd2in9, epd2in7, etc.
-rotation: 0 # 0/90/180/270
-refresh_seconds: 60 # full refresh cadence
-invert_down: true # show red/black style with arrows
-
+  model: epd2in13_V4
+  rotation: 0
+  refresh_seconds: 60
+  invert_down: true
 
 symbols:
  - type: stock
