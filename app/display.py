@@ -11,59 +11,50 @@ FONT_BIG = ImageFont.truetype("fonts/Inter-Bold.ttf", 40)
 FONT_SM = ImageFont.truetype("fonts/Inter-Regular.ttf", 14)
 
 
-def text_wh(draw, text, font):
-    try:
-        l,t,r,b = draw.textbbox((0,0), text, font=font)
-        return r-l, b-t
-    except AttributeError:
-        return draw.textsize(text, font=font)
-
 class Display:
     def __init__(self, rotation=0):
         self.epd = epd_driver.EPD()
+        # Initialize with full update mode
         self.epd.init(self.epd.FULL_UPDATE)
         self.rotation = rotation
-        self.width, self.height = self.epd.height, self.epd.width
-        self.pad = 6
-        self.partial_count = 0
+        self.width, self.height = self.epd.height, self.epd.width  # note swap
+        self.padding = 4
 
     def clear(self):
         self.epd.init(self.epd.FULL_UPDATE)
         self.epd.Clear(0xFF)
 
-    def header(self, d, label):
-        # Label (left)
-        d.text((self.pad, self.pad), label, font=FONT_REG, fill=0)
-        # Time (right)
+    def header(self,imageDraw,label):
+        imageDraw.text((6, 4), label, font=FONT_REG, fill=0)
         ts = datetime.now()
         time_text = ts.strftime('%H:%M')
-        tw, th = text_wh(d, time_text, FONT_SM)
-        x = self.width - tw - self.pad
-        d.text((x, self.pad), time_text, font=FONT_SM, fill=0)
+        text_w, text_h = imageDraw.textsize(time_text, font=FONT_SM)
+        x = self.width - text_w - self.padding  # 4px padding from right edge
+        y = self.padding
+        imageDraw.text((x, y), time_text, font=FONT_SM, fill=0)
 
     def draw_ticker(self, label, price, change_pct, ts, invert_down=True):
         img = Image.new('1', (self.width, self.height), 255)
         d = ImageDraw.Draw(img)
 
-        self.header(d, label)
+        # Header
+        self.header(d,label)
 
-        # Price (center)
+        # Price
         price_txt = f"{price:,.2f}" if isinstance(price, (int, float)) else str(price)
-        pw, ph = text_wh(d, price_txt, FONT_BIG)
-        d.text(((self.width - pw)//2, self.pad + 20), price_txt, font=FONT_BIG, fill=0)
+        w, h = d.textsize(price_txt, font=FONT_BIG)
+        d.text(((self.width - w) // 2, 30), price_txt, font=FONT_BIG, fill=0)
 
-        # Change (center)
-        up = (isinstance(change_pct, (int,float)) and change_pct >= 0)
-        arrow = "▲" if up else "▼"
-        change_txt = f"{arrow} {change_pct:+.2f}%" if isinstance(change_pct, (int,float)) else str(change_pct)
-        cw, ch = text_wh(d, change_txt, FONT_REG)
-        d.text(((self.width - cw)//2, self.pad + 20 + ph + 8), change_txt, font=FONT_REG, fill=0)
+        # Change
+        arrow = "▲" if change_pct >= 0 else "▼"
+        change_txt = f"{arrow} {change_pct:+.2f}%"
+        fill = 0
+        d.text(((self.width - d.textsize(change_txt, FONT_REG)[0]) // 2, 80),
+               change_txt, font=FONT_REG, fill=fill)
 
-        # Refresh policy
-        if self.partial_count % 12 == 0:
-            self.epd.init(self.epd.FULL_UPDATE)
-        else:
-            self.epd.init(self.epd.PART_UPDATE)
-        self.partial_count += 1
-
+        # Update with partial refresh to avoid flicker
+        self.epd.init(self.epd.PART_UPDATE)
         self.epd.display(self.epd.getbuffer(img))
+
+    def sleep(self):
+        self.epd.sleep()
