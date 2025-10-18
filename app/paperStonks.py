@@ -32,7 +32,6 @@ def run():
                 label=item.get('label', data['symbol']),
                 price=data['price'],
                 change_pct=data['change_pct'],
-                ts=datetime.now(),
                 invert_down=invert_down,
                 )
             time.sleep(refresh_s)

@@ -33,6 +33,12 @@ class Display:
         x = self.width - text_w - self.padding
         imageDraw.text((x, self.padding), header_text, font=FONT_SM, fill=0)
 
+
+    def price(self,imageDraw, price):
+        price_txt = f"$ {price:,.2f}" if isinstance(price, (int, float)) else str(price)
+        w, h = imageDraw.textsize(price_txt, font=FONT_BIG)
+        imageDraw.text(((self.width - w) // 2, 30), price_txt, font=FONT_BIG, fill=0)
+
     def draw_ticker(self, label, price, change_pct, ts, invert_down=True):
         img = Image.new('1', (self.width, self.height), 255)
         d = ImageDraw.Draw(img)
@@ -41,9 +47,7 @@ class Display:
         self.header(d,label)
 
         # Price
-        price_txt = f"$ {price:,.2f}" if isinstance(price, (int, float)) else str(price)
-        w, h = d.textsize(price_txt, font=FONT_BIG)
-        d.text(((self.width - w) // 2, 30), price_txt, font=FONT_BIG, fill=0)
+        self.price(d,price)
 
         # Change
         arrow = "▲" if change_pct >= 0 else "▼"
