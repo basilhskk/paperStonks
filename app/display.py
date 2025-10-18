@@ -39,7 +39,7 @@ class Display:
         w, h = imageDraw.textsize(price_txt, font=FONT_BIG)
         imageDraw.text(((self.width - w) // 2, 30), price_txt, font=FONT_BIG, fill=0)
 
-    def draw_ticker(self, label, price, change_pct, ts, invert_down=True):
+    def draw_ticker(self, label, price, change_pct, invert_down=True):
         img = Image.new('1', (self.width, self.height), 255)
         d = ImageDraw.Draw(img)
 
