@@ -29,7 +29,7 @@ class Display:
 
         # Header
         d.text((6, 4), label, font=FONT_REG, fill=0)
-        d.text((self.width - 90, 4), ts.strftime('%H:%M'), font=FONT_SM, fill=0)
+        d.text((self.width - 40, 4), ts.strftime('%H:%M'), font=FONT_SM, fill=0)
 
         # Price
         price_txt = f"{price:,.2f}" if isinstance(price, (int, float)) else str(price)
