@@ -41,7 +41,7 @@ class Display:
         self.header(d,label)
 
         # Price
-        price_txt = f"{price:,.2f}" if isinstance(price, (int, float)) else str(price)
+        price_txt = f"$ {price:,.2f}" if isinstance(price, (int, float)) else str(price)
         w, h = d.textsize(price_txt, font=FONT_BIG)
         d.text(((self.width - w) // 2, 30), price_txt, font=FONT_BIG, fill=0)
 
