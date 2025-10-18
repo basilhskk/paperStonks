@@ -28,7 +28,7 @@ class Display:
         imageDraw.text((6, 4), label, font=FONT_REG, fill=0)
         ts = datetime.now()
         time_text = ts.strftime('%H:%M')
-        text_w, text_h = imageDraw.textsize(time_text, font=FONT_SM,fill=0)
+        text_w, text_h = imageDraw.textsize(time_text, font=FONT_SM)
         x = self.width - text_w - self.padding  # 4px padding from right edge
         y = self.padding
         imageDraw.text((x, y), time_text, font=FONT_SM, fill=0)
