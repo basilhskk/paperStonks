@@ -9,6 +9,7 @@ def fetch(symbol: str):
     params={'ids': base, 'vs_currencies': 'usd', 'include_24hr_change': 'true'}, timeout=8
     )
     j = r.json()
+    print(j)
     price = float(j[base]['usd'])
     change_pct = float(j[base]['usd_24h_change'])
     return {
