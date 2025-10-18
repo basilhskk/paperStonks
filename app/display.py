@@ -18,18 +18,27 @@ class Display:
         self.epd.init(self.epd.FULL_UPDATE)
         self.rotation = rotation
         self.width, self.height = self.epd.height, self.epd.width  # note swap
+        self.padding = 4
 
     def clear(self):
         self.epd.init(self.epd.FULL_UPDATE)
         self.epd.Clear(0xFF)
+
+    def header(self,imageDraw,label):
+        imageDraw.text((6, 4), label, font=FONT_REG, fill=0)
+        ts = datetime.now()
+        time_text = ts.strftime('%H:%M')
+        text_w, text_h = imageDraw.textsize(time_text, font=FONT_SM,fill=0)
+        x = self.width - text_w - self.padding  # 4px padding from right edge
+        y = self.padding
+        imageDraw.text((x, y), time_text, font=FONT_SM, fill=0)
 
     def draw_ticker(self, label, price, change_pct, ts, invert_down=True):
         img = Image.new('1', (self.width, self.height), 255)
         d = ImageDraw.Draw(img)
 
         # Header
-        d.text((6, 4), label, font=FONT_REG, fill=0)
-        d.text((self.width - 45, 4), ts.strftime('%H:%M'), font=FONT_SM, fill=0)
+        self.header(d,label)
 
         # Price
         price_txt = f"{price:,.2f}" if isinstance(price, (int, float)) else str(price)
