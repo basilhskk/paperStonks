@@ -27,6 +27,10 @@ class Display:
         self.pad = 6
         self.partial_count = 0
 
+    def clear(self):
+        self.epd.init(self.epd.FULL_UPDATE)
+        self.epd.Clear(0xFF)
+
     def header(self, d, label):
         # Label (left)
         d.text((self.pad, self.pad), label, font=FONT_REG, fill=0)
